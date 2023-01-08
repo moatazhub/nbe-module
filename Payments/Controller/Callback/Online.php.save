@@ -1,0 +1,61 @@
+<?php
+namespace Ahly\Payments\Controller\Callback;
+//use Fkra\Test1\Helper\Notify;
+use Ahly\Payments\Helper\Accepting;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+class Online extends \Magento\Framework\App\Action\Action implements CsrfAwareActionInterface
+{
+
+  public function __construct(
+    \Magento\Framework\App\Action\Context $context,
+    \Magento\Sales\Model\Order $order,
+    \Ahly\Payments\Model\Online $online,
+    \Magento\Framework\App\Request\Http $request
+)
+{
+    parent::__construct($context);
+    $this->resultFactory = $context->getResultFactory();
+    $this->order = $order;
+    $this->online = $online;
+    $this->request = $request;
+    
+}
+
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
+    }
+
+	public function execute()
+	{
+
+    $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
+              $logger = new \Zend_Log();
+              $logger->addWriter($writer);
+              $logger->info('Debuggging response...');
+
+            //   $return_data = $this->getRequest()->getContent();
+            // //   $json = json_decode($return_data, true);
+            // //   $logger->info($json);
+            //   //print_r($return_data);
+            //   $json = json_decode($return_data, true);
+			// 	$obj = $json['obj'];
+			// 	$data = $json['obj'];
+             
+            $id= $this->request->getParam('orderid');
+             
+           // $id= $this->getRequest->getParam('resultIndicato');
+            $logger->info($id);
+           //$logger->info($this->getRequest()->getContent());
+            echo $id;
+           // echo "jeeee";
+           // die();
+    }
+}

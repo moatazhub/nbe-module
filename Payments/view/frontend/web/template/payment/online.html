@@ -1,0 +1,185 @@
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div
+  class="payment-method"
+  data-bind="css: {'_active': (getCode() == isChecked())}"
+>
+  <div class="payment-method-title field choice">
+    <input
+      type="radio"
+      name="payment[method]"
+      class="radio"
+      data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"
+    />
+    <label data-bind="attr: {'for': getCode()}" class="label"
+      ><span data-bind="text: getTitle()"></span
+    ></label>
+  </div>
+  <div class="payment-method-content">
+    <!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+    <div class="payment-method-billing-address">
+      <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+      <!-- ko template: getTemplate() --><!-- /ko -->
+      <!--/ko-->
+    </div>
+
+    <!-- ACCEPT -->
+    <style>
+      #online-container {
+        background: rgba(0, 0, 0, 0.35);
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        z-index: 99;
+        color: #ffffff;
+      }
+      #online-container .inner-page div {
+        display: none;
+      }
+      #online-container svg {
+        display: block;
+        height: auto;
+        width: 250px;
+        max-width: 90%;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 50%;
+      }
+      #online-container .inner-page {
+        background: rgba(0, 0, 0, 0.85);
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        overflow: auto;
+      }
+      #online-iframes-container {
+        overflow-y: scroll !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: 400px;
+      }
+      #online-iframes-container iframe {
+        border: none;
+        z-index: 999999999;
+        width: 100%;
+        overflow: auto;
+      }
+      #online-container #online-iframes-container li {
+        text-align: left;
+        cursor: pointer;
+      }
+      .online-card-option svg {
+        display: inline-block !important;
+        width: 24px !important;
+        vertical-align: middle !important;
+        margin-left: 1rem !important;
+      }
+      .online-card-option.active svg {
+        fill: #4caf50;
+      }
+      .spinner {
+        position: absolute;
+        left: 5%;
+        bottom: 5%;
+        width: 25px;
+        height: 25px;
+        padding: 0;
+        margin: 0;
+        border-radius: 50%;
+        border: 5px solid transparent;
+        -webkit-animation: spin 500ms linear infinite;
+        animation: spin 500ms linear infinite;
+        z-index: 1000;
+      }
+
+      .spinner.default {
+        border-top: 5px solid #01aef0;
+        border-bottom: 5px solid #01aef0;
+      }
+      .spinner.stop {
+        -webkit-animation: spin 1500ms ease-in-out infinite;
+        animation: spin 1500ms ease-in-out infinite;
+        border-top: 5px solid #4caf50;
+        border-bottom: 5px solid #4caf50;
+      }
+
+      @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <div id="online-container">
+      <span class="spinner default"></span>
+      <div class="inner-page">
+        <div id="online-errors">
+          <svg
+            style="fill: #e91e63"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+            />
+          </svg>
+          <br />
+          <span class="errors">UKNOWN ERROR</span>
+        </div>
+        <div id="online-iframes-container"></div>
+      </div>
+    </div>
+    <!-- /ACCEPT -->
+
+    <div class="checkout-agreements-block">
+      <!-- ko foreach: $parent.getRegion('before-place-order') -->
+      <!-- ko template: getTemplate() --><!-- /ko -->
+      <!--/ko-->
+    </div>
+
+    <div class="actions-toolbar">
+      <div class="primary">
+        <button
+          class="action primary checkout"
+          type="submit"
+          data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Next')},
+                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        enable: (getCode() == isChecked())
+                        "
+          disabled
+        >
+          <span data-bind="i18n: 'Next'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
